@@ -1,28 +1,33 @@
-import fetch from "node-fetch";
-
-const API_KEY = "TU_API_KEY";
-
-async function generateTests(feature) {
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${API_KEY}`,
-      "Content-Type": "application/json"
+function generateTestCases(userStory) {
+  return [
+    {
+      title: "Valid login",
+      steps: [
+        "Go to login page",
+        "Enter valid username",
+        "Enter valid password",
+        "Click login"
+      ],
+      expected: "User is redirected to dashboard"
     },
-    body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [
-        {
-          role: "system",
-          content: "Eres un QA experto generando casos de prueba"
-        },
-        {
-          role: "user",
-          content: `Genera casos de prueba para: ${feature}`
-        }
-      ]
-    })
-  });
+    {
+      title: "Invalid login",
+      steps: [
+        "Go to login page",
+        "Enter invalid credentials",
+        "Click login"
+      ],
+      expected: "Error message is displayed"
+    },
+    {
+      title: "Empty fields",
+      steps: [
+        "Go to login page",
+        "Click login without entering data"
+      ],
+      expected: "Validation messages appear"
+    }
+  ];
+}
 
-  const data = await res.json();
-  console.log(data.choices[0].message
+module.exports = { generateTestCases };
